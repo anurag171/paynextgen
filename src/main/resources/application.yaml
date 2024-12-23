@@ -1,0 +1,51 @@
+server:
+  port: 8097
+  tomcat:
+    max-connections: 500
+    threads:
+      max: 10
+      max-queue-capacity: 100
+spring:
+  data:
+    mongodb:
+      port: 27817
+      host: localhost
+      username: Pattu
+      password: Pattu123
+      database: paymentnextgen
+  application:
+    name: paynextgen
+  temporal:
+    connection:
+      target: localhost:7233
+    namespace: default
+    workers:
+      task-queue: payment-processing-task-queue
+      capacity:
+        max-concurrent-workflow-task-executors: 6
+        max-concurrent-activity-task-pollers: 6
+      rate-limits:
+        max-worker-activities-per-second: 2
+        max-task-queue-activities-per-second: 2
+    workflow-cache:
+      max-instances: 10
+      max-threads: 10
+    workers-auto-discovery:
+      packages: com.anurag.temporal.payment.processor.workflow
+app:
+  temporal:
+    setting:
+      host: localhost
+      port: 7233
+      queue: "payment-processing-task-queue"
+      health-check: "N"
+      remote-stub: "N"
+      app-creator: "N"
+      namespace: "default"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: "/actuator"
+
