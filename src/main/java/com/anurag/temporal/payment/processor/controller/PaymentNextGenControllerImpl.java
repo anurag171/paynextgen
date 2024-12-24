@@ -45,7 +45,7 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
      * @return
      */
     @Override
-    @PostMapping
+    @PostMapping(path = "/sanctions")
     public ResponseEntity<String> processAsynchronousSanctionResponse(String workflowId) {
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
         paymentService.processAsynchrousSanctionResponse(workflowId);
@@ -57,7 +57,7 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
      * @return
      */
     @Override
-    @PostMapping
+    @PostMapping(path = "/fraud")
     public ResponseEntity<String> processAsynchronousFraudResponse(String workflowId) {
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
         paymentService.processAsynchrnousFraudResponse(workflowId);
