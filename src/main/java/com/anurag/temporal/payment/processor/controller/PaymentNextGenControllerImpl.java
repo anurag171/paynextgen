@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +48,19 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
     @PostMapping
     public ResponseEntity<String> processAsynchronousSanctionResponse(String workflowId) {
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
+        paymentService.processAsynchrousSanctionResponse(workflowId);
+        return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
+    }
+
+    /**
+     * @param workflowId
+     * @return
+     */
+    @Override
+    @PostMapping
+    public ResponseEntity<String> processAsynchronousFraudResponse(String workflowId) {
+        PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
+        paymentService.processAsynchrnousFraudResponse(workflowId);
         return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
     }
 }

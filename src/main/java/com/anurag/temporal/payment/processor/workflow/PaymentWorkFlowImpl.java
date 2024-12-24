@@ -45,7 +45,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
      *
      */
     @Override
-    public void signalPaymentAccepted() {
+    public void processAsynchrousSanctionResponse() {
 
     }
 
@@ -53,7 +53,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
      *
      */
     @Override
-    public void signalOrderPickedUp() {
+    public void processAsynchrousFraudResponse() {
 
     }
 

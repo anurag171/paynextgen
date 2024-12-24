@@ -1,6 +1,5 @@
 package com.anurag.temporal.payment.processor;
 
-import com.mongodb.MongoClientSettings;
 import com.mongodb.ReadConcern;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoClient;

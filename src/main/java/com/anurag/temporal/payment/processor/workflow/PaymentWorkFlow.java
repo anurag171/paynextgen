@@ -12,10 +12,10 @@ public interface PaymentWorkFlow {
     PaymentObject process(PaymentObject paymentObject);
 
     @SignalMethod
-    void signalPaymentAccepted();
+    void processAsynchrousSanctionResponse();
 
     @SignalMethod
-    void signalOrderPickedUp();
+    void processAsynchrousFraudResponse();
 
     @SignalMethod
     void signalOrderDelivered();

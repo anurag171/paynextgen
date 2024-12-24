@@ -1,6 +1,5 @@
 package com.anurag.temporal.payment.processor.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
 import java.util.List;

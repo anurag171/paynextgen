@@ -27,14 +27,14 @@ public class PaymentService {
 		//WorkflowClient.start(workflow::process,paymentObject);
 	}
 
-	public void isPaymentAccepted(String workflowId) {
+	public void processAsynchrousSanctionResponse(String workflowId) {
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + workflowId);
-		 workflow.signalPaymentAccepted();
+		 workflow.processAsynchrousSanctionResponse();
 	}
 
-	public void makeOrderPickedUp(String workflowId) {
+	public void processAsynchrnousFraudResponse(String workflowId) {
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + workflowId);
-		workflow.signalOrderPickedUp();
+		workflow.processAsynchrousFraudResponse();
 	}
 
 	public void makeOrderDelivered(String workflowId) {
