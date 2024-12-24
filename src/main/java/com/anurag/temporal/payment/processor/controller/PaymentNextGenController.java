@@ -11,5 +11,5 @@ public interface PaymentNextGenController {
 
     ResponseEntity createPayment(@RequestBody() PaymentObject paymentObject) throws JsonProcessingException;
 
-    ResponseEntity paymentValidated(@RequestParam(name = "workflowId") String workflowId);
+    ResponseEntity processAsynchronousSanctionResponse(@RequestParam(name = "workflowId") String workflowId);
 }

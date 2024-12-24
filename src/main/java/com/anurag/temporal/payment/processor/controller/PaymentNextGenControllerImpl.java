@@ -46,8 +46,8 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
      * @return
      */
     @Override
-    @GetMapping
-    public ResponseEntity<String> paymentValidated(String workflowId) {
+    @PostMapping
+    public ResponseEntity<String> processAsynchronousSanctionResponse(String workflowId) {
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
         return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
     }
