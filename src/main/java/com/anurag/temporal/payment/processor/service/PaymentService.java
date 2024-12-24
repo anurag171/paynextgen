@@ -7,8 +7,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
+import org.jdom2.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @Service
 public class PaymentService {
@@ -21,7 +24,7 @@ public class PaymentService {
 	AppTemporalProperties appTemporalProperties;
 
 
-	public PaymentObject startPaymentProcessing(PaymentObject paymentObject) throws JsonProcessingException {
+	public PaymentObject startPaymentProcessing(PaymentObject paymentObject) throws IOException, JDOMException {
 		PaymentWorkFlow workflow = createWorkFlowConnection(paymentObject);
 		return workflow.process(paymentObject);
 		//WorkflowClient.start(workflow::process,paymentObject);

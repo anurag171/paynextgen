@@ -10,7 +10,9 @@ import io.temporal.common.RetryOptions;
 import io.temporal.spring.boot.WorkflowImpl;
 import io.temporal.workflow.Workflow;
 import lombok.extern.slf4j.Slf4j;
+import org.jdom2.JDOMException;
 
+import java.io.IOException;
 import java.time.Duration;
 
 
@@ -30,7 +32,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
             .newActivityStub(PaymentValidationActivity.class, validationActivityOptions);
 
     @Override
-    public PaymentObject process(PaymentObject paymentObject) {
+    public PaymentObject process(PaymentObject paymentObject) throws IOException, JDOMException {
         PaymentObject paymentObject1 = validationActivity.validate(paymentObject);
         ActivityObject activityObject = paymentObject1.getActivityObjectMap().get(ActivityStageEnum.VALIDATION.name());
         PaymentStatusContainer paymentStatusContainer = new PaymentStatusContainer();
