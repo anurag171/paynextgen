@@ -1,5 +1,6 @@
 package com.anurag.temporal.payment.processor.workflow;
 
+import com.anurag.temporal.payment.processor.activity.PaymentSanctionActivity;
 import com.anurag.temporal.payment.processor.activity.PaymentValidationActivity;
 import com.anurag.temporal.payment.processor.constant.ActivityStageEnum;
 import com.anurag.temporal.payment.processor.model.ActivityObject;
@@ -20,6 +21,8 @@ import java.time.Duration;
 @Slf4j
 public class PaymentWorkFlowImpl implements PaymentWorkFlow{
 
+
+
     private final RetryOptions validationActivityRetryOptions = RetryOptions.newBuilder()
             .setInitialInterval(Duration.ofSeconds(1))
             .setMaximumInterval(Duration.ofSeconds(100))
@@ -31,10 +34,19 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
     public final PaymentValidationActivity validationActivity = Workflow
             .newActivityStub(PaymentValidationActivity.class, validationActivityOptions);
 
+    private final ActivityOptions sanctionActivityOptions = ActivityOptions.newBuilder()
+            .setStartToCloseTimeout(Duration.ofSeconds(30))
+            .setRetryOptions(validationActivityRetryOptions).build();
+
+    public final PaymentSanctionActivity sanctionActivity = Workflow
+            .newActivityStub(PaymentSanctionActivity.class, sanctionActivityOptions);
+
     @Override
     public PaymentObject process(PaymentObject paymentObject) throws IOException, JDOMException {
         PaymentObject paymentObject1 = validationActivity.validate(paymentObject);
+        sanctionActivity.execute(paymentObject1);
         ActivityObject activityObject = paymentObject1.getActivityObjectMap().get(ActivityStageEnum.VALIDATION.name());
+
         PaymentStatusContainer paymentStatusContainer = new PaymentStatusContainer();
 
             paymentStatusContainer.setPaymentValidated(!(!activityObject.isValidated()
@@ -47,7 +59,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
      *
      */
     @Override
-    public void processAsynchrousSanctionResponse() {
+    public void processAsynchrousSanctionResponse(String workflowId) {
 
     }
 
@@ -55,7 +67,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
      *
      */
     @Override
-    public void processAsynchrousFraudResponse() {
+    public void processAsynchrousFraudResponse(String workflowId) {
 
     }
 
@@ -63,7 +75,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
      *
      */
     @Override
-    public void signalOrderDelivered() {
+    public void byPassHoldWorkflow(String workflowId) {
 
     }
 }

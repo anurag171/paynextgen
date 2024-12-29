@@ -2,6 +2,7 @@ package com.anurag.temporal.payment.processor.configuration;
 
 import com.anurag.temporal.payment.processor.activity.PaymentFxCalculationActivity;
 import com.anurag.temporal.payment.processor.activity.PaymentPostingActivity;
+import com.anurag.temporal.payment.processor.activity.PaymentSanctionActivity;
 import com.anurag.temporal.payment.processor.activity.PaymentValidationActivity;
 import com.anurag.temporal.payment.processor.workflow.PaymentWorkFlowImpl;
 import io.temporal.worker.Worker;
@@ -24,22 +25,23 @@ public class TemporalWorkerCreator implements ApplicationRunner {
     ApplicationContext appContext;
 
     /**
-     * @param args     *
+     * @param args *
      */
     @Override
-    public void run(ApplicationArguments args)  {
+    public void run(ApplicationArguments args) {
         log.info("Created temporal client here");
         log.info("Starting with below properties [{}] ", temporalProperties.toString());
         if (temporalProperties.getAppCreator().equals("Y") || temporalProperties.getRemoteStub().equals("N")) {
 
-                WorkerFactory factory = appContext.getBean(WorkerFactory.class);
-                PaymentValidationActivity signUpActivity = appContext.getBean(PaymentValidationActivity.class);
-                PaymentPostingActivity paymentDebitCreditActivity = appContext.getBean(PaymentPostingActivity.class);
-                PaymentFxCalculationActivity paymentFxCalculationActivity = appContext.getBean(PaymentFxCalculationActivity.class);
-                Worker worker = factory.newWorker(temporalProperties.getQueue());
-                worker.registerWorkflowImplementationTypes(PaymentWorkFlowImpl.class);
-                worker.registerActivitiesImplementations(signUpActivity,paymentFxCalculationActivity,paymentDebitCreditActivity);
-                factory.start();
+            WorkerFactory factory = appContext.getBean(WorkerFactory.class);
+            PaymentValidationActivity paymentValidationActivity = appContext.getBean(PaymentValidationActivity.class);
+            PaymentPostingActivity paymentDebitCreditActivity = appContext.getBean(PaymentPostingActivity.class);
+            PaymentFxCalculationActivity paymentFxCalculationActivity = appContext.getBean(PaymentFxCalculationActivity.class);
+            PaymentSanctionActivity paymentSanctionActivity = appContext.getBean(PaymentSanctionActivity.class);
+            Worker worker = factory.newWorker(temporalProperties.getQueue());
+            worker.registerWorkflowImplementationTypes(PaymentWorkFlowImpl.class);
+            worker.registerActivitiesImplementations(paymentValidationActivity, paymentSanctionActivity, paymentFxCalculationActivity, paymentDebitCreditActivity);
+            factory.start();
 
 
         }

@@ -15,11 +15,11 @@ public interface PaymentWorkFlow {
     PaymentObject process(PaymentObject paymentObject) throws IOException, JDOMException;
 
     @SignalMethod
-    void processAsynchrousSanctionResponse();
+    void processAsynchrousSanctionResponse(String workflowId);
 
     @SignalMethod
-    void processAsynchrousFraudResponse();
+    void processAsynchrousFraudResponse(String workflowId);
 
     @SignalMethod
-    void signalOrderDelivered();
+    void byPassHoldWorkflow(String workflowId);
 }

@@ -17,6 +17,7 @@ public class PaymentObject {
 
     private String id;
     private String message;
+    private String responseString;
     private LocalDateTime receivedTime;
     private Map<String,Object> map;
     private Map<String,ActivityObject> activityObjectMap= new HashMap<>();

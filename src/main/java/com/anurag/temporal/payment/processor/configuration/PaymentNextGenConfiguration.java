@@ -2,6 +2,7 @@ package com.anurag.temporal.payment.processor.configuration;
 
 import com.anurag.temporal.payment.processor.activity.PaymentFxCalculationActivityImpl;
 import com.anurag.temporal.payment.processor.activity.PaymentPostingActivityImpl;
+import com.anurag.temporal.payment.processor.activity.PaymentSanctionActivityImpl;
 import com.anurag.temporal.payment.processor.activity.PaymentValidationActivityImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowClientOptions;
@@ -50,7 +51,7 @@ public class PaymentNextGenConfiguration {
     }
 
     @Bean
-    public PaymentValidationActivityImpl SignUpActivity() {
+    public PaymentValidationActivityImpl paymentValidationActivity() {
         return new PaymentValidationActivityImpl();
     }
 
@@ -62,5 +63,10 @@ public class PaymentNextGenConfiguration {
     @Bean
     public PaymentFxCalculationActivityImpl fxCalculationActivity() {
         return new PaymentFxCalculationActivityImpl();
+    }
+
+    @Bean
+    public PaymentSanctionActivityImpl paymentSanctionActivity() {
+        return new PaymentSanctionActivityImpl();
     }
 }

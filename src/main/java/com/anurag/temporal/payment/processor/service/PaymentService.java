@@ -32,17 +32,17 @@ public class PaymentService {
 
 	public void processAsynchrousSanctionResponse(String workflowId) {
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + workflowId);
-		 workflow.processAsynchrousSanctionResponse();
+		 workflow.processAsynchrousSanctionResponse(workflowId);
 	}
 
 	public void processAsynchrnousFraudResponse(String workflowId) {
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + workflowId);
-		workflow.processAsynchrousFraudResponse();
+		workflow.processAsynchrousFraudResponse(workflowId);
 	}
 
-	public void makeOrderDelivered(String workflowId) {
+	public void bypassHoldWorkflow(String workflowId) {
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + workflowId);
-		workflow.signalOrderDelivered();
+		workflow.byPassHoldWorkflow(workflowId);
 	}
 
 	public PaymentWorkFlow createWorkFlowConnection(PaymentObject paymentObject) throws JsonProcessingException {
