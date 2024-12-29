@@ -1,6 +1,7 @@
 package com.anurag.temporal.payment.processor.controller;
 
 import com.anurag.temporal.payment.processor.model.PaymentObject;
+import com.anurag.temporal.payment.processor.model.SanctionResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,6 @@ public interface PaymentNextGenController {
 
     ResponseEntity createPayment(@RequestBody() PaymentObject paymentObject) throws JsonProcessingException;
 
-    ResponseEntity processAsynchronousSanctionResponse(@RequestParam(name = "workflowId") String workflowId);
+    ResponseEntity processAsynchronousSanctionResponse(@RequestBody SanctionResponse sanctionResponse);
     ResponseEntity processAsynchronousFraudResponse(@RequestParam(name = "workflowId") String workflowId);
 }

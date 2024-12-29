@@ -2,6 +2,7 @@ package com.anurag.temporal.payment.processor.controller;
 
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.PaymentStatusContainer;
+import com.anurag.temporal.payment.processor.model.SanctionResponse;
 import com.anurag.temporal.payment.processor.service.PaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,14 +43,15 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
     }
 
     /**
-     * @param workflowId
+     * @param sanctionResponse
      * @return
      */
     @Override
     @PostMapping(path = "/sanctions")
-    public ResponseEntity<String> processAsynchronousSanctionResponse(String workflowId) {
+    public ResponseEntity<String> processAsynchronousSanctionResponse(@RequestBody SanctionResponse sanctionResponse) {
+        log.info("Receieved sanction asynchronous response {}",sanctionResponse);
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
-        paymentService.processAsynchrousSanctionResponse(workflowId);
+        paymentService.processAsynchrousSanctionResponse(sanctionResponse.getWorkflowid());
         return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
     }
 

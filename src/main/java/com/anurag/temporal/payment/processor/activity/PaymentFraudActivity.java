@@ -6,7 +6,7 @@ import io.temporal.activity.ActivityInterface;
 @ActivityInterface
 public interface PaymentFraudActivity{
 
-    public PaymentObject fraudCheck(PaymentObject paymentObject);
+    PaymentObject fraudCheck(PaymentObject paymentObject);
 
     default PaymentObject execute(PaymentObject paymentObject){
         //implement the use

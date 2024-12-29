@@ -45,6 +45,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
     public PaymentObject process(PaymentObject paymentObject) throws IOException, JDOMException {
         PaymentObject paymentObject1 = validationActivity.validate(paymentObject);
         sanctionActivity.execute(paymentObject1);
+        Workflow.sleep(Duration.ofMinutes(2));
         ActivityObject activityObject = paymentObject1.getActivityObjectMap().get(ActivityStageEnum.VALIDATION.name());
 
         PaymentStatusContainer paymentStatusContainer = new PaymentStatusContainer();

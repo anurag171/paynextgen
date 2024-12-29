@@ -9,6 +9,6 @@ import java.io.IOException;
 @ActivityInterface
 public interface PaymentValidationActivity {
 
-    public PaymentObject validate(PaymentObject paymentObject) throws IOException, JDOMException;
+    PaymentObject validate(PaymentObject paymentObject) throws IOException, JDOMException;
 
 }

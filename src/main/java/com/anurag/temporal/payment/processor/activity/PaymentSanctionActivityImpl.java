@@ -1,7 +1,9 @@
 package com.anurag.temporal.payment.processor.activity;
 
 import com.anurag.temporal.payment.processor.model.PaymentObject;
+import com.anurag.temporal.payment.processor.model.SanctionRequest;
 import com.anurag.temporal.payment.processor.service.PaymentUtility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.temporal.spring.boot.ActivityImpl;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -29,12 +31,16 @@ public class PaymentSanctionActivityImpl implements PaymentSanctionActivity{
      */
     @Override
     public PaymentObject sanction(PaymentObject paymentObject) throws IOException {
-       var sanctionRequest =  generateSanctionRequest(paymentObject.getMessage());
+       var sanctionRequesMsg =  generateSanctionRequest(paymentObject.getMessage());
+        SanctionRequest sanctionRequest1 = new SanctionRequest();
+        sanctionRequest1.setId(paymentObject.getId());
+        sanctionRequest1.setMessage(paymentObject.getMessage());
+        ObjectMapper objectMapper = new ObjectMapper();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity entity = new HttpEntity(sanctionRequest,headers);
+        HttpEntity entity = new HttpEntity(objectMapper.writeValueAsString(sanctionRequest1),headers);
         ResponseEntity<Boolean> received = restTemplate.exchange("http://localhost:9999/sanction", HttpMethod.POST,entity,Boolean.class);
 
         return paymentObject;
