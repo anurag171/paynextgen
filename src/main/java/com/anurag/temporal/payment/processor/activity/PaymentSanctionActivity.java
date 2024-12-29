@@ -8,7 +8,7 @@ import java.io.IOException;
 @ActivityInterface
 public interface PaymentSanctionActivity {
 
-    public PaymentObject sanction(PaymentObject paymentObject) throws IOException;
+    PaymentObject sanction(PaymentObject paymentObject) throws IOException;
 
     default PaymentObject execute(PaymentObject paymentObject){
         //implement the use
