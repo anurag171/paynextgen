@@ -1,8 +1,6 @@
 package com.anurag.temporal.payment.processor.controller;
 
-import com.anurag.temporal.payment.processor.model.PaymentObject;
-import com.anurag.temporal.payment.processor.model.PaymentStatusContainer;
-import com.anurag.temporal.payment.processor.model.SanctionResponse;
+import com.anurag.temporal.payment.processor.model.*;
 import com.anurag.temporal.payment.processor.service.PaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
@@ -56,14 +54,14 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
     }
 
     /**
-     * @param workflowId
+     * @param fraudResponse
      * @return
      */
     @Override
     @PostMapping(path = "/fraud")
-    public ResponseEntity<String> processAsynchronousFraudResponse(String workflowId) {
+    public ResponseEntity<String> processAsynchronousFraudResponse(@RequestBody FraudResponse fraudResponse) {
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
-        paymentService.processAsynchrnousFraudResponse(workflowId);
+        paymentService.processAsynchrnousFraudResponse(fraudResponse);
         return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
     }
 }

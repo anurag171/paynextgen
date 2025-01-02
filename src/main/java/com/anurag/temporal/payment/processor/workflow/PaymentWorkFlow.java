@@ -1,5 +1,6 @@
 package com.anurag.temporal.payment.processor.workflow;
 
+import com.anurag.temporal.payment.processor.model.FraudResponse;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionResponse;
 import io.temporal.workflow.SignalMethod;
@@ -19,7 +20,7 @@ public interface PaymentWorkFlow {
     void processAsynchrousSanctionResponse(SanctionResponse sanctionResponse);
 
     @SignalMethod
-    void processAsynchrousFraudResponse(String workflowId);
+    void processAsynchrousFraudResponse(FraudResponse fraudResponse);
 
     @SignalMethod
     void byPassHoldWorkflow(String workflowId);
