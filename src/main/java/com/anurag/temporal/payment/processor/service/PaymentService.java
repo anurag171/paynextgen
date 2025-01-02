@@ -2,11 +2,13 @@ package com.anurag.temporal.payment.processor.service;
 
 import com.anurag.temporal.payment.processor.configuration.AppTemporalProperties;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
+import com.anurag.temporal.payment.processor.model.SanctionResponse;
 import com.anurag.temporal.payment.processor.workflow.PaymentWorkFlow;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom2.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
+@Slf4j
 public class PaymentService {
 
 
@@ -30,9 +33,10 @@ public class PaymentService {
 		//WorkflowClient.start(workflow::process,paymentObject);
 	}
 
-	public void processAsynchrousSanctionResponse(String workflowId) {
-		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + workflowId);
-		 workflow.processAsynchrousSanctionResponse(workflowId);
+	public void processAsynchrousSanctionResponse(SanctionResponse sanctionResponse) {
+		log.info("Received signal for workflow id {}",sanctionResponse.getWorkflowid() );
+		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + sanctionResponse.getWorkflowid());
+		 workflow.processAsynchrousSanctionResponse(sanctionResponse);
 	}
 
 	public void processAsynchrnousFraudResponse(String workflowId) {

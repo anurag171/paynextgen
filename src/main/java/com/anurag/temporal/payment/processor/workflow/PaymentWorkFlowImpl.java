@@ -6,10 +6,13 @@ import com.anurag.temporal.payment.processor.constant.ActivityStageEnum;
 import com.anurag.temporal.payment.processor.model.ActivityObject;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.PaymentStatusContainer;
+import com.anurag.temporal.payment.processor.model.SanctionResponse;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
 import io.temporal.spring.boot.WorkflowImpl;
 import io.temporal.workflow.Workflow;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom2.JDOMException;
 
@@ -19,7 +22,11 @@ import java.time.Duration;
 
 @WorkflowImpl
 @Slf4j
+@Getter
+@Setter
 public class PaymentWorkFlowImpl implements PaymentWorkFlow{
+
+    private Boolean finalSanctionResponseReceived = false;
 
 
 
@@ -45,7 +52,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
     public PaymentObject process(PaymentObject paymentObject) throws IOException, JDOMException {
         PaymentObject paymentObject1 = validationActivity.validate(paymentObject);
         sanctionActivity.execute(paymentObject1);
-        Workflow.sleep(Duration.ofMinutes(2));
+        Workflow.await(Duration.ofMinutes(2), this::getFinalSanctionResponseReceived);
         ActivityObject activityObject = paymentObject1.getActivityObjectMap().get(ActivityStageEnum.VALIDATION.name());
 
         PaymentStatusContainer paymentStatusContainer = new PaymentStatusContainer();
@@ -60,8 +67,8 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
      *
      */
     @Override
-    public void processAsynchrousSanctionResponse(String workflowId) {
-
+    public void processAsynchrousSanctionResponse(SanctionResponse sanctionResponse) {
+            setFinalSanctionResponseReceived(true);
     }
 
     /**

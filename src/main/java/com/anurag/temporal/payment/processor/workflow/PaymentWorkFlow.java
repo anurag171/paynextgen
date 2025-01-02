@@ -1,6 +1,7 @@
 package com.anurag.temporal.payment.processor.workflow;
 
 import com.anurag.temporal.payment.processor.model.PaymentObject;
+import com.anurag.temporal.payment.processor.model.SanctionResponse;
 import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
@@ -15,7 +16,7 @@ public interface PaymentWorkFlow {
     PaymentObject process(PaymentObject paymentObject) throws IOException, JDOMException;
 
     @SignalMethod
-    void processAsynchrousSanctionResponse(String workflowId);
+    void processAsynchrousSanctionResponse(SanctionResponse sanctionResponse);
 
     @SignalMethod
     void processAsynchrousFraudResponse(String workflowId);

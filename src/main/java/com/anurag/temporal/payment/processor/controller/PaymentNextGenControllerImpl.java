@@ -51,7 +51,7 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
     public ResponseEntity<String> processAsynchronousSanctionResponse(@RequestBody SanctionResponse sanctionResponse) {
         log.info("Receieved sanction asynchronous response {}",sanctionResponse);
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
-        paymentService.processAsynchrousSanctionResponse(sanctionResponse.getWorkflowid());
+        paymentService.processAsynchrousSanctionResponse(sanctionResponse);
         return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
     }
 
