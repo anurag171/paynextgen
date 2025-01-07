@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.newrelic.agent.java</groupId>
             <artifactId>newrelic-java</artifactId>
-            <version>8.14.0</version>
+            <version>8.17.0</version>
             <scope>provided</scope>
             <type>zip</type>
         </dependency>
@@ -122,8 +122,6 @@
                         <configuration>
                             <includeGroupIds>com.newrelic.agent.java</includeGroupIds>
                             <includeArtifactIds>newrelic-java</includeArtifactIds>
-                            <!-- you can optionally exclude files -->
-                            <!-- <excludes>**/newrelic.yml</excludes> -->
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>

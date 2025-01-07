@@ -4,3 +4,5 @@ This code is example of <h1>Temporal Orchestration</h1> integrated with <h2>Spri
 
 
 ![img_3.png](img_3.png)![img_1.png](img_1.png)
+
+![img_5.png](img_5.png)
