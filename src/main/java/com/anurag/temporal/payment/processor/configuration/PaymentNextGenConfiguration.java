@@ -1,9 +1,6 @@
 package com.anurag.temporal.payment.processor.configuration;
 
-import com.anurag.temporal.payment.processor.activity.PaymentFxCalculationActivityImpl;
-import com.anurag.temporal.payment.processor.activity.PaymentPostingActivityImpl;
-import com.anurag.temporal.payment.processor.activity.PaymentSanctionActivityImpl;
-import com.anurag.temporal.payment.processor.activity.PaymentValidationActivityImpl;
+import com.anurag.temporal.payment.processor.activity.*;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowClientOptions;
 import io.temporal.serviceclient.RpcRetryOptions;
@@ -68,5 +65,10 @@ public class PaymentNextGenConfiguration {
     @Bean
     public PaymentSanctionActivityImpl paymentSanctionActivity() {
         return new PaymentSanctionActivityImpl();
+    }
+
+    @Bean
+    public PaymentFraudActivityImpl paymentFraudActivity() {
+        return new PaymentFraudActivityImpl();
     }
 }

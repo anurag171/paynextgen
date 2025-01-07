@@ -1,9 +1,6 @@
 package com.anurag.temporal.payment.processor.configuration;
 
-import com.anurag.temporal.payment.processor.activity.PaymentFxCalculationActivity;
-import com.anurag.temporal.payment.processor.activity.PaymentPostingActivity;
-import com.anurag.temporal.payment.processor.activity.PaymentSanctionActivity;
-import com.anurag.temporal.payment.processor.activity.PaymentValidationActivity;
+import com.anurag.temporal.payment.processor.activity.*;
 import com.anurag.temporal.payment.processor.workflow.PaymentWorkFlowImpl;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
@@ -36,11 +33,11 @@ public class TemporalWorkerCreator implements ApplicationRunner {
             WorkerFactory factory = appContext.getBean(WorkerFactory.class);
             PaymentValidationActivity paymentValidationActivity = appContext.getBean(PaymentValidationActivity.class);
             PaymentPostingActivity paymentDebitCreditActivity = appContext.getBean(PaymentPostingActivity.class);
-            PaymentFxCalculationActivity paymentFxCalculationActivity = appContext.getBean(PaymentFxCalculationActivity.class);
+            PaymentFraudActivity paymentFraudActivity = appContext.getBean(PaymentFraudActivity.class);
             PaymentSanctionActivity paymentSanctionActivity = appContext.getBean(PaymentSanctionActivity.class);
             Worker worker = factory.newWorker(temporalProperties.getQueue());
             worker.registerWorkflowImplementationTypes(PaymentWorkFlowImpl.class);
-            worker.registerActivitiesImplementations(paymentValidationActivity, paymentSanctionActivity, paymentFxCalculationActivity, paymentDebitCreditActivity);
+            worker.registerActivitiesImplementations(paymentValidationActivity, paymentSanctionActivity, paymentFraudActivity, paymentDebitCreditActivity);
             factory.start();
 
 

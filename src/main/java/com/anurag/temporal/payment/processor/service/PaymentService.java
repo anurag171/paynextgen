@@ -1,7 +1,6 @@
 package com.anurag.temporal.payment.processor.service;
 
 import com.anurag.temporal.payment.processor.configuration.AppTemporalProperties;
-import com.anurag.temporal.payment.processor.model.FraudRequest;
 import com.anurag.temporal.payment.processor.model.FraudResponse;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionResponse;
@@ -42,6 +41,7 @@ public class PaymentService {
 	}
 
 	public void processAsynchrnousFraudResponse(FraudResponse fraudResponse) {
+		log.info("Received signal for workflow id {}",fraudResponse.getWorkflowid() );
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + fraudResponse.getWorkflowid());
 		workflow.processAsynchrousFraudResponse(fraudResponse);
 	}
@@ -61,4 +61,8 @@ public class PaymentService {
 		return workflowClient.newWorkflowStub(PaymentWorkFlow.class, options);
 	}
 
+	public String getWorkflowStatus(String workflowId) {
+		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + workflowId);
+		return workflow.getStatus();
+	}
 }

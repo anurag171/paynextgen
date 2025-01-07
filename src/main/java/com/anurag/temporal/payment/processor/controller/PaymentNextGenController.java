@@ -16,4 +16,6 @@ public interface PaymentNextGenController {
 
     ResponseEntity processAsynchronousSanctionResponse(@RequestBody SanctionResponse sanctionResponse);
     ResponseEntity processAsynchronousFraudResponse(@RequestBody FraudResponse fraudResponse);
+
+    ResponseEntity getPaymentStatus(@RequestParam("workflowid")  String workflowid);
 }

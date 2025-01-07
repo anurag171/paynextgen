@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1")
@@ -47,7 +44,7 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
     @Override
     @PostMapping(path = "/sanctions")
     public ResponseEntity<String> processAsynchronousSanctionResponse(@RequestBody SanctionResponse sanctionResponse) {
-        log.info("Receieved sanction asynchronous response {}",sanctionResponse);
+        log.info("Received sanction asynchronous response {}",sanctionResponse);
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
         paymentService.processAsynchrousSanctionResponse(sanctionResponse);
         return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
@@ -60,8 +57,19 @@ public class PaymentNextGenControllerImpl implements PaymentNextGenController{
     @Override
     @PostMapping(path = "/fraud")
     public ResponseEntity<String> processAsynchronousFraudResponse(@RequestBody FraudResponse fraudResponse) {
+        log.info("Received fraud asynchronous response {}",fraudResponse);
         PaymentStatusContainer paymentStatusContainer = applicationContext.getBean(PaymentStatusContainer.class);
         paymentService.processAsynchrnousFraudResponse(fraudResponse);
         return ResponseEntity.ok(String.valueOf(paymentStatusContainer.isPaymentValidated()));
+    }
+
+    /**
+     * @param workflowid
+     * @return
+     */
+    @Override
+    @GetMapping
+    public ResponseEntity getPaymentStatus(String workflowid) {
+        return ResponseEntity.ok(paymentService.getWorkflowStatus(workflowid));
     }
 }

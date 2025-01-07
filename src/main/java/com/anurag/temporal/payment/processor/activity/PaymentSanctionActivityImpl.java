@@ -5,12 +5,15 @@ import com.anurag.temporal.payment.processor.model.SanctionRequest;
 import com.anurag.temporal.payment.processor.service.PaymentUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.temporal.spring.boot.ActivityImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
 @ActivityImpl
+@Slf4j
 public class PaymentSanctionActivityImpl implements PaymentSanctionActivity{
     /**
      * @param paymentObject
@@ -31,6 +34,8 @@ public class PaymentSanctionActivityImpl implements PaymentSanctionActivity{
      */
     @Override
     public PaymentObject sanction(PaymentObject paymentObject) throws IOException {
+        ThreadContext.getContext().put("workflowid", "Payment_"+paymentObject.getId());
+        log.info("Inside the sanction activity");
        var sanctionRequesMsg =  generateSanctionRequest(paymentObject.getMessage());
         SanctionRequest sanctionRequest1 = new SanctionRequest();
         sanctionRequest1.setId(paymentObject.getId());

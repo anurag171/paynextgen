@@ -3,6 +3,7 @@ package com.anurag.temporal.payment.processor.workflow;
 import com.anurag.temporal.payment.processor.model.FraudResponse;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionResponse;
+import io.temporal.workflow.QueryMethod;
 import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
@@ -24,4 +25,7 @@ public interface PaymentWorkFlow {
 
     @SignalMethod
     void byPassHoldWorkflow(String workflowId);
+
+    @QueryMethod
+    String getStatus();
 }
