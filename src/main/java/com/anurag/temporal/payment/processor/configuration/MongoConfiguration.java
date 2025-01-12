@@ -1,4 +1,4 @@
-package com.anurag.temporal.payment.processor;
+package com.anurag.temporal.payment.processor.configuration;
 
 import com.mongodb.ReadConcern;
 import com.mongodb.WriteConcern;
