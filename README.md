@@ -32,7 +32,10 @@
 **Screen shots of application**
 
 <p align="center">
-<img src="./images/img_5.png" width="80%"></p>
+<img src="./images/img_7.png" width="80%"></p>
+<img src="./images/img_8.png" width="80%"></p>
+<img src="./images/img_9.png" width="80%"></p>
+<img src="./images/img_10.png" width="80%"></p>
 
 Project details
 
