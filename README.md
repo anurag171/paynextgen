@@ -47,16 +47,15 @@ Project details
 
 ### Pushing the payment [__Postman__]:-
 
-- **Drag** the card or the card pile you want to move.
-- **Drop** the dragged card pile on the target and if the move is legal card will move
-- Note:- Drag and Drop doesn't work for properly for **firefox** due to their lack of support to html Drag and drop API - https://bugzilla.mozilla.org/show_bug.cgi?id=505521 .
+- **Post payment** 
+- **Received** 
+
 
 ### Simulator [__Simulator with rapidoid__]-
 
-- **Click** on the card or card pile you want to move .The pile turns to **blue**.
-- **Click** on the
-  destination card and if the move is legal the cards will
-  stack below the target.
+- **Click** .
+- **Click** 
+ 
 
 ## About the project.
 
