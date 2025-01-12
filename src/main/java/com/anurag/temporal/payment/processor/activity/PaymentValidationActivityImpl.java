@@ -1,18 +1,18 @@
 package com.anurag.temporal.payment.processor.activity;
 
+import com.anurag.temporal.payment.processor.constant.ActivityEventEnum;
 import com.anurag.temporal.payment.processor.constant.ActivityStageEnum;
+import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.PaymentValidationActivityObject;
+import com.anurag.temporal.payment.processor.model.mongo.MongoEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.JDOMParseException;
 import org.jdom2.input.SAXBuilder;
 import org.springframework.web.client.RestTemplate;
 
-
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,62 +22,69 @@ import java.util.List;
 @Slf4j
 public class PaymentValidationActivityImpl implements PaymentValidationActivity{
 
-    public static final String respone = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-            "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.002.001.03\">\n" +
-            "    <CstmrCdtTrfRpt>\n" +
-            "        <GrpHdr>\n" +
-            "            <MsgId>Message-Id</MsgId>\n" +
-            "            <CreDtTm>2024-05-10T16:10:02.017+00:00</CreDtTm>\n" +
-            "            <NbOfTxs>1</NbOfTxs>\n" +
-            "            <SttlmInf>\n" +
-            "                <SttlmDt>YYYY-MM-DD</SttlmDt>\n" +
-            "            </SttlmInf>\n" +
-            "            <InitgPty>\n" +
-            "                <Id>\n" +
-            "                    <OrgId>\n" +
-            "                        <Othr>\n" +
-            "                            <Id>Client-Id</Id>\n" +
-            "                        </Othr>\n" +
-            "                    </OrgId>\n" +
-            "                </Id>\n" +
-            "            </InitgPty>\n" +
-            "        </GrpHdr>\n" +
-            "        <Rpt>\n" +
-            "            <OrgnlMsgId>Message-Id</OrgnlMsgId>\n" +
-            "            <OrgnlMsgNmId>Batch-Id</OrgnlMsgNmId>\n" +
-            "            <RptId>Report-Id</RptId>\n" +
-            "            <CreDtTm>2024-05-10T16:10:02.017+00:00</CreDtTm>\n" +
-            "            <AcctRpt>\n" +
-            "                <Acct>\n" +
-            "                    <Id>\n" +
-            "                        <Othr>\n" +
-            "                            <Id>Debtor Account Id</Id>\n" +
-            "                        </Othr>\n" +
-            "                    </Id>\n" +
-            "                </Acct>\n" +
-            "                <TtlNtriesCnt>1</TtlNtriesCnt>\n" +
-            "                <ntry>\n" +
-            "                    <NtryDtTm>2024-05-10T16:10:02.017+00:00</NtryDtTm>\n" +
-            "                    <Amt>\n" +
-            "                        <InstdAmt Ccy=\"USD\">Amount</InstdAmt>\n" +
-            "                    </Amt>\n" +
-            "                    <CdtDbtInd>DBIT</CdtDbtInd>\n" +
-            "                    <Sts>\n" +
-            "                        <Prtry>Success/Failure Status</Prtry> \n" +
-            "                    </Sts>\n" +
-            "                    <Rsn>\n" +
-            "                        <RsnCd>\n" +
-            "                            <Prtry>Reason Code</Prtry> \n" +
-            "                        </RsnCd>\n" +
-            "                    </Rsn>\n" +
-            "                    <AddtlNtryInf>\n" +
-            "                        <OrgnlEndToEndId>End-to-End-Id</OrgnlEndToEndId>\n" +
-            "                    </AddtlNtryInf>\n" +
-            "                </ntry>\n" +
-            "            </AcctRpt>\n" +
-            "        </Rpt>\n" +
-            "    </CstmrCdtTrfRpt>\n" +
-            "</Document>";
+    private final CustomActivityEventListener customActivityEventListener;
+
+    public static final String respone = """
+            <?xml version="1.0" encoding="UTF-8" ?>
+            <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.002.001.03">
+                <CstmrCdtTrfRpt>
+                    <GrpHdr>
+                        <MsgId>Message-Id</MsgId>
+                        <CreDtTm>2024-05-10T16:10:02.017+00:00</CreDtTm>
+                        <NbOfTxs>1</NbOfTxs>
+                        <SttlmInf>
+                            <SttlmDt>YYYY-MM-DD</SttlmDt>
+                        </SttlmInf>
+                        <InitgPty>
+                            <Id>
+                                <OrgId>
+                                    <Othr>
+                                        <Id>Client-Id</Id>
+                                    </Othr>
+                                </OrgId>
+                            </Id>
+                        </InitgPty>
+                    </GrpHdr>
+                    <Rpt>
+                        <OrgnlMsgId>Message-Id</OrgnlMsgId>
+                        <OrgnlMsgNmId>Batch-Id</OrgnlMsgNmId>
+                        <RptId>Report-Id</RptId>
+                        <CreDtTm>2024-05-10T16:10:02.017+00:00</CreDtTm>
+                        <AcctRpt>
+                            <Acct>
+                                <Id>
+                                    <Othr>
+                                        <Id>Debtor Account Id</Id>
+                                    </Othr>
+                                </Id>
+                            </Acct>
+                            <TtlNtriesCnt>1</TtlNtriesCnt>
+                            <ntry>
+                                <NtryDtTm>2024-05-10T16:10:02.017+00:00</NtryDtTm>
+                                <Amt>
+                                    <InstdAmt Ccy="USD">Amount</InstdAmt>
+                                </Amt>
+                                <CdtDbtInd>DBIT</CdtDbtInd>
+                                <Sts>
+                                    <Prtry>Success/Failure Status</Prtry>\s
+                                </Sts>
+                                <Rsn>
+                                    <RsnCd>
+                                        <Prtry>Reason Code</Prtry>\s
+                                    </RsnCd>
+                                </Rsn>
+                                <AddtlNtryInf>
+                                    <OrgnlEndToEndId>End-to-End-Id</OrgnlEndToEndId>
+                                </AddtlNtryInf>
+                            </ntry>
+                        </AcctRpt>
+                    </Rpt>
+                </CstmrCdtTrfRpt>
+            </Document>""";
+
+    public PaymentValidationActivityImpl(CustomActivityEventListener customActivityEventListener) {
+        this.customActivityEventListener = customActivityEventListener;
+    }
 
 
     @Override
@@ -86,17 +93,19 @@ public class PaymentValidationActivityImpl implements PaymentValidationActivity{
         RestTemplate restTemplate = new RestTemplate();
         String valid = restTemplate.getForObject(String.format("http://localhost:9999/dupcheck?messageId=%s",paymentObject.getId()),String.class);
         List<String> list = new ArrayList<>();
+        customActivityEventListener.handleActivityEvent(new MongoEvent("Payment_"+paymentObject.getId(), "from payment validation activity for workflow id " +"Payment_"+paymentObject.getId())
+        , ActivityEventEnum.MONGO_EVENT);
         if(Boolean.parseBoolean(valid)){
             var message = new String(Base64.getDecoder().decode(paymentObject.getMessage()))  ;
             if(!message.contains("<") && !valideXml(message)){
-                list.add(String.format("Improper message []",message));
+                list.add(String.format("Improper message %s",message));
             }
         }else {
             list.add(String.format("%s is duplicate",paymentObject.getId()));
         }
 
           paymentObject.getActivityObjectMap().put(ActivityStageEnum.VALIDATION.name(),
-                 PaymentValidationActivityObject.builder().validated(list.size()>0)
+                 PaymentValidationActivityObject.builder().validated(!list.isEmpty())
                          .validationFailureList(list).build());
         paymentObject.setResponseString(Base64.getEncoder().encodeToString(respone.getBytes(StandardCharsets.UTF_8)));
           return paymentObject;
@@ -106,7 +115,7 @@ public class PaymentValidationActivityImpl implements PaymentValidationActivity{
     {
         SAXBuilder builder = new SAXBuilder();
         try{
-            Document doc = builder.build(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+            builder.build(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
         } catch (JDOMParseException ex) {
             return false;
         }

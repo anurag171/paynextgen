@@ -1,5 +1,6 @@
 package com.anurag.temporal.payment.processor.activity;
 
+import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
 import com.anurag.temporal.payment.processor.model.FraudRequest;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionRequest;
@@ -15,7 +16,13 @@ import java.io.IOException;
 
 @ActivityImpl
 @Slf4j
-public class PaymentFraudActivityImpl implements PaymentFraudActivity{
+public class PaymentFraudActivityImpl implements PaymentFraudActivity {
+
+    private final CustomActivityEventListener customActivityEventListener;
+
+    public PaymentFraudActivityImpl(CustomActivityEventListener customActivityEventListener) {
+        this.customActivityEventListener = customActivityEventListener;
+    }
 
     /**
      * @param paymentObject
@@ -24,8 +31,8 @@ public class PaymentFraudActivityImpl implements PaymentFraudActivity{
     @Override
     public PaymentObject fraudCheck(PaymentObject paymentObject) throws IOException {
         log.info("Inside fraud check request activity");
-        ThreadContext.getContext().put("workflowid", "Payment_"+paymentObject.getId());
-        var fraudRequest1 =  generateFraudRequest(paymentObject.getMessage());
+        ThreadContext.getContext().put("workflowid", "Payment_" + paymentObject.getId());
+        var fraudRequest1 = generateFraudRequest(paymentObject.getMessage());
         FraudRequest fraudRequest = new FraudRequest();
         fraudRequest.setId(paymentObject.getId());
         fraudRequest.setMessage(fraudRequest1);
@@ -34,11 +41,11 @@ public class PaymentFraudActivityImpl implements PaymentFraudActivity{
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity entity = new HttpEntity(objectMapper.writeValueAsString(fraudRequest),headers);
+        HttpEntity entity = new HttpEntity(objectMapper.writeValueAsString(fraudRequest), headers);
         log.info("Calling fraud check request endpoint");
-        ResponseEntity<Boolean> received = restTemplate.exchange("http://localhost:9999/fraud", HttpMethod.POST,entity,Boolean.class);
+        ResponseEntity<Boolean> received = restTemplate.exchange("http://localhost:9999/fraud", HttpMethod.POST, entity, Boolean.class);
 
-        return PaymentUtility.handleHttpResponse(received,paymentObject);
+        return PaymentUtility.handleHttpResponse(received, paymentObject);
     }
 
     private String generateFraudRequest(String pain001v9) throws IOException {

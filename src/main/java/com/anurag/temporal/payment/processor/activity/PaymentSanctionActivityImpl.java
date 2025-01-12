@@ -1,10 +1,13 @@
 package com.anurag.temporal.payment.processor.activity;
 
+import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionRequest;
 import com.anurag.temporal.payment.processor.service.PaymentUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.temporal.spring.boot.ActivityImpl;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.http.*;
@@ -15,6 +18,13 @@ import java.io.IOException;
 @ActivityImpl
 @Slf4j
 public class PaymentSanctionActivityImpl implements PaymentSanctionActivity{
+
+    private final CustomActivityEventListener customActivityEventListener;
+    public PaymentSanctionActivityImpl(CustomActivityEventListener customActivityEventListener) {
+        this.customActivityEventListener = customActivityEventListener;
+    }
+
+
     /**
      * @param paymentObject
      * @return

@@ -8,12 +8,12 @@ import java.util.Map;
 public enum ActivityStageEnum {
 
 
-    VALIDATION("validation",new PaymentValidationActivityImpl()),
-    SANCTION("sanction",new PaymentSanctionActivityImpl()),
-    FRAUD("fraud",new PaymentFraudActivityImpl()),
-    FUNDCHECK("fundcheck",new PaymentFundCheckActivityImpl()),
-    FX("fx",new PaymentFxCalculationActivityImpl()),
-    POSTING("posting", new PaymentPostingActivityImpl());
+    VALIDATION("validation",new PaymentValidationActivityImpl(null)),
+    SANCTION("sanction",new PaymentSanctionActivityImpl(null)),
+    FRAUD("fraud",new PaymentFraudActivityImpl(null)),
+    FUNDCHECK("fundcheck",new PaymentFundCheckActivityImpl(null)),
+    FX("fx",new PaymentFxCalculationActivityImpl(null)),
+    POSTING("posting", new PaymentPostingActivityImpl(null));
 
 
    final static Map<String, Object> map = new HashMap<>();

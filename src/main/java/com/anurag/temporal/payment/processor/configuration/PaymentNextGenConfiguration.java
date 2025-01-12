@@ -1,12 +1,14 @@
 package com.anurag.temporal.payment.processor.configuration;
 
 import com.anurag.temporal.payment.processor.activity.*;
+import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowClientOptions;
 import io.temporal.serviceclient.RpcRetryOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.WorkerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -15,6 +17,9 @@ import java.time.Duration;
 
 @Configuration
 public class PaymentNextGenConfiguration {
+
+    @Autowired
+    CustomActivityEventListener customActivityEventListener;
 
     @Bean
     public AppTemporalProperties temporalProperties(){
@@ -49,26 +54,26 @@ public class PaymentNextGenConfiguration {
 
     @Bean
     public PaymentValidationActivityImpl paymentValidationActivity() {
-        return new PaymentValidationActivityImpl();
+        return new PaymentValidationActivityImpl(customActivityEventListener);
     }
 
     @Bean
     public PaymentPostingActivityImpl postingActivity() {
-        return new PaymentPostingActivityImpl();
+        return new PaymentPostingActivityImpl(customActivityEventListener);
     }
 
     @Bean
     public PaymentFxCalculationActivityImpl fxCalculationActivity() {
-        return new PaymentFxCalculationActivityImpl();
+        return new PaymentFxCalculationActivityImpl(customActivityEventListener);
     }
 
     @Bean
     public PaymentSanctionActivityImpl paymentSanctionActivity() {
-        return new PaymentSanctionActivityImpl();
+        return new PaymentSanctionActivityImpl(customActivityEventListener);
     }
 
     @Bean
     public PaymentFraudActivityImpl paymentFraudActivity() {
-        return new PaymentFraudActivityImpl();
+        return new PaymentFraudActivityImpl(customActivityEventListener);
     }
 }
