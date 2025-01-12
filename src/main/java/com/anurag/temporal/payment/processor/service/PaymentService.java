@@ -1,6 +1,10 @@
 package com.anurag.temporal.payment.processor.service;
 
 import com.anurag.temporal.payment.processor.configuration.AppTemporalProperties;
+import com.anurag.temporal.payment.processor.constant.ActivityEventEnum;
+import com.anurag.temporal.payment.processor.event.PaymentEvent;
+import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
+import com.anurag.temporal.payment.processor.event.mongo.MongoEvent;
 import com.anurag.temporal.payment.processor.model.FraudResponse;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionResponse;
@@ -27,6 +31,9 @@ public class PaymentService {
 	@Autowired
 	AppTemporalProperties appTemporalProperties;
 
+	@Autowired
+	private CustomActivityEventListener customActivityEventListener;
+
 
 	public PaymentObject startPaymentProcessing(PaymentObject paymentObject) throws IOException, JDOMException {
 		PaymentWorkFlow workflow = createWorkFlowConnection(paymentObject);
@@ -37,12 +44,22 @@ public class PaymentService {
 	public void processAsynchrousSanctionResponse(SanctionResponse sanctionResponse) {
 		log.info("Received signal for workflow id {}",sanctionResponse.getWorkflowid() );
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + sanctionResponse.getWorkflowid());
+		customActivityEventListener.handleActivityEvent(PaymentEvent.builder()
+				.activityEventEnum(ActivityEventEnum.MONGO_EVENT)
+				.mongoEvent(MongoEvent.builder().workflowId("Payment_"+sanctionResponse.getWorkflowid())
+						.message("received payment sanction final response  workflow id Payment_"+sanctionResponse.getWorkflowid()).build())
+				.build());
 		 workflow.processAsynchrousSanctionResponse(sanctionResponse);
 	}
 
 	public void processAsynchrnousFraudResponse(FraudResponse fraudResponse) {
 		log.info("Received signal for workflow id {}",fraudResponse.getWorkflowid() );
 		PaymentWorkFlow workflow = workflowClient.newWorkflowStub(PaymentWorkFlow.class, "Payment_" + fraudResponse.getWorkflowid());
+		customActivityEventListener.handleActivityEvent(PaymentEvent.builder()
+				.activityEventEnum(ActivityEventEnum.MONGO_EVENT)
+				.mongoEvent(MongoEvent.builder().workflowId("Payment_"+fraudResponse.getWorkflowid())
+						.message("received payment fraud final response  workflow id Payment_" +fraudResponse.getWorkflowid()).build())
+				.build());
 		workflow.processAsynchrousFraudResponse(fraudResponse);
 	}
 

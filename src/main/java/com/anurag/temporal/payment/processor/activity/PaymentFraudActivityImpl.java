@@ -1,6 +1,9 @@
 package com.anurag.temporal.payment.processor.activity;
 
+import com.anurag.temporal.payment.processor.constant.ActivityEventEnum;
+import com.anurag.temporal.payment.processor.event.PaymentEvent;
 import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
+import com.anurag.temporal.payment.processor.event.mongo.MongoEvent;
 import com.anurag.temporal.payment.processor.model.FraudRequest;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionRequest;
@@ -44,6 +47,11 @@ public class PaymentFraudActivityImpl implements PaymentFraudActivity {
         HttpEntity entity = new HttpEntity(objectMapper.writeValueAsString(fraudRequest), headers);
         log.info("Calling fraud check request endpoint");
         ResponseEntity<Boolean> received = restTemplate.exchange("http://localhost:9999/fraud", HttpMethod.POST, entity, Boolean.class);
+        customActivityEventListener.handleActivityEvent(PaymentEvent.builder()
+                .activityEventEnum(ActivityEventEnum.MONGO_EVENT)
+                .mongoEvent(MongoEvent.builder().workflowId("Payment_"+paymentObject.getId())
+                        .message("from payment fraud activity for workflow id Payment_"+paymentObject.getId()).build())
+                .build());
 
         return PaymentUtility.handleHttpResponse(received, paymentObject);
     }

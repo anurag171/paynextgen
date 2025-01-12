@@ -1,8 +1,7 @@
 package com.anurag.temporal.payment.processor.service;
 
-import com.anurag.temporal.payment.processor.model.mongo.MongoEvent;
+import com.anurag.temporal.payment.processor.event.PaymentEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,8 @@ public class CustomMongoEventPublisher {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public void publishEvent(MongoEvent message) {
-
-        applicationEventPublisher.publishEvent(message);
+    public void publishEvent(PaymentEvent paymentEvent) {
+        log.info("Publish event {}",paymentEvent);
+        applicationEventPublisher.publishEvent(paymentEvent);
     }
 }

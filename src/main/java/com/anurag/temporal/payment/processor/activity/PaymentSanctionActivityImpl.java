@@ -1,6 +1,9 @@
 package com.anurag.temporal.payment.processor.activity;
 
+import com.anurag.temporal.payment.processor.constant.ActivityEventEnum;
+import com.anurag.temporal.payment.processor.event.PaymentEvent;
 import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
+import com.anurag.temporal.payment.processor.event.mongo.MongoEvent;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionRequest;
 import com.anurag.temporal.payment.processor.service.PaymentUtility;
@@ -24,20 +27,6 @@ public class PaymentSanctionActivityImpl implements PaymentSanctionActivity{
         this.customActivityEventListener = customActivityEventListener;
     }
 
-
-    /**
-     * @param paymentObject
-     * @return
-     */
-    @Override
-    public PaymentObject execute(PaymentObject paymentObject) {
-        try {
-            return sanction(paymentObject);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /**
      * @param paymentObject
      * @return
@@ -57,6 +46,11 @@ public class PaymentSanctionActivityImpl implements PaymentSanctionActivity{
 
         HttpEntity entity = new HttpEntity(objectMapper.writeValueAsString(sanctionRequest1),headers);
         ResponseEntity<Boolean> received = restTemplate.exchange("http://localhost:9999/sanction", HttpMethod.POST,entity,Boolean.class);
+        customActivityEventListener.handleActivityEvent(PaymentEvent.builder()
+                .activityEventEnum(ActivityEventEnum.MONGO_EVENT)
+                .mongoEvent(MongoEvent.builder().workflowId("Payment_"+paymentObject.getId())
+                        .message("from payment sanction activity for workflow id Payment_"+paymentObject.getId()).build())
+                .build());
 
         return paymentObject;
     }

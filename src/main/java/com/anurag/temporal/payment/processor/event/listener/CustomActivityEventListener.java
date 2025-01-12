@@ -1,8 +1,10 @@
 package com.anurag.temporal.payment.processor.event.listener;
 
 
-import com.anurag.temporal.payment.processor.constant.ActivityEventEnum;
-import com.anurag.temporal.payment.processor.model.mongo.MongoEvent;
+import com.anurag.temporal.payment.processor.event.PaymentEvent;
+import com.anurag.temporal.payment.processor.event.mongo.MongoEvent;
+import com.anurag.temporal.payment.processor.event.mongo.sequence.DatabaseSequence;
+import com.anurag.temporal.payment.processor.event.mongo.sequence.SequenceGeneratorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -17,18 +19,22 @@ public class CustomActivityEventListener {
     @Autowired
     MongoTemplate mongoTemplate;
 
+    @Autowired
+    SequenceGeneratorService sequenceGeneratorService;
+
     @Async
     @EventListener
-    public void handleActivityEvent(MongoEvent event, ActivityEventEnum activityEventEnum) {
+    public void handleActivityEvent(PaymentEvent event) {
 
-        switch (activityEventEnum) {
-            case MONGO_EVENT -> mongoAction(event);
+        switch (event.getActivityEventEnum()) {
+            case MONGO_EVENT -> mongoAction(event.getMongoEvent());
         }
 
     }
 
-    public void mongoAction(MongoEvent event) {
+    private void mongoAction(MongoEvent event) {
         log.info("Received event {}", event);
+        event.setId(String.valueOf(sequenceGeneratorService.generateSequence("payment_sequence")));
         mongoTemplate.save(event);
     }
 }

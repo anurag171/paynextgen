@@ -2,10 +2,11 @@ package com.anurag.temporal.payment.processor.activity;
 
 import com.anurag.temporal.payment.processor.constant.ActivityEventEnum;
 import com.anurag.temporal.payment.processor.constant.ActivityStageEnum;
+import com.anurag.temporal.payment.processor.event.PaymentEvent;
 import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
+import com.anurag.temporal.payment.processor.event.mongo.MongoEvent;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.PaymentValidationActivityObject;
-import com.anurag.temporal.payment.processor.model.mongo.MongoEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom2.JDOMException;
 import org.jdom2.input.JDOMParseException;
@@ -93,8 +94,13 @@ public class PaymentValidationActivityImpl implements PaymentValidationActivity{
         RestTemplate restTemplate = new RestTemplate();
         String valid = restTemplate.getForObject(String.format("http://localhost:9999/dupcheck?messageId=%s",paymentObject.getId()),String.class);
         List<String> list = new ArrayList<>();
-        customActivityEventListener.handleActivityEvent(new MongoEvent("Payment_"+paymentObject.getId(), "from payment validation activity for workflow id " +"Payment_"+paymentObject.getId())
-        , ActivityEventEnum.MONGO_EVENT);
+        customActivityEventListener.handleActivityEvent(PaymentEvent
+                .builder()
+                .activityEventEnum(ActivityEventEnum.MONGO_EVENT)
+                .mongoEvent(MongoEvent.builder().workflowId("Payment_"+paymentObject.getId())
+                        .message("from payment validation activity for workflow id Payment_"+paymentObject.getId()).build()
+                        )
+                .build());
         if(Boolean.parseBoolean(valid)){
             var message = new String(Base64.getDecoder().decode(paymentObject.getMessage()))  ;
             if(!message.contains("<") && !valideXml(message)){

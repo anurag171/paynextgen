@@ -4,7 +4,6 @@ import com.mongodb.ReadConcern;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.WriteResultChecking;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MongoConfiguration {
 
-    @Value("${spring.data.mongodb.host}")
+    /*@Value("${spring.data.mongodb.host}")
     private String host;
     @Value("${spring.data.mongodb.port}")
     private String port;
@@ -25,7 +24,7 @@ public class MongoConfiguration {
     private String username;
     @Value("${spring.data.mongodb.password}")
     private String password;
-
+*/
     //@Bean
     public MongoClient getMongoClient() {
 

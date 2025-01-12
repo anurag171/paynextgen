@@ -60,7 +60,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
         ThreadContext.getContext().put("workflowid", "Payment_"+paymentObject.getId());
         PaymentObject paymentObject1 = validationActivity.validate(paymentObject);
         log.info("Sanction activity call start");
-        sanctionActivity.execute(paymentObject1);
+        sanctionActivity.sanction(paymentObject1);
         log.info("Sanction activity call end.Waiting for sanction response");
         Workflow.await(Duration.ofDays(360), this::getFinalSanctionResponseReceived);
         log.info("sanction response received.Calling fraud activity");
