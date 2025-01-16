@@ -1,15 +1,14 @@
 package com.anurag.temporal.payment.processor.activity;
 
+import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventListener;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 
 public class PaymentAckResponseActivityImpl implements PaymentAckResponseActivity{
-    /**
-     * @param paymentObject
-     * @return
-     */
-    @Override
-    public PaymentObject execute(PaymentObject paymentObject) {
-        return generateAck(paymentObject);
+
+    private final CustomActivityEventListener customActivityEventListener;
+
+    public PaymentAckResponseActivityImpl(CustomActivityEventListener customActivityEventListener) {
+        this.customActivityEventListener = customActivityEventListener;
     }
 
     /**
@@ -17,7 +16,7 @@ public class PaymentAckResponseActivityImpl implements PaymentAckResponseActivit
      * @return
      */
     @Override
-    public PaymentObject generateAck(PaymentObject paymentObject) {
+    public PaymentObject generateAcknowledgement(PaymentObject paymentObject) {
         return paymentObject;
     }
 }

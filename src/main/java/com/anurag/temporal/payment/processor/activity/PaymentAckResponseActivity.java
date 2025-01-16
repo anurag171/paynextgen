@@ -4,10 +4,6 @@ import com.anurag.temporal.payment.processor.model.PaymentObject;
 
 public interface PaymentAckResponseActivity{
 
-    PaymentObject generateAck(PaymentObject paymentObject);
+    PaymentObject generateAcknowledgement(PaymentObject paymentObject);
 
-    default PaymentObject execute(PaymentObject paymentObject){
-        //implement the use
-        return paymentObject;
-    }
 }

@@ -68,6 +68,16 @@ public class PaymentNextGenConfiguration {
     }
 
     @Bean
+    public PaymentFundCheckActivityImpl paymentFundCheckActivity() {
+        return new PaymentFundCheckActivityImpl(customActivityEventListener);
+    }
+
+    @Bean
+    public PaymentAckResponseActivityImpl paymentAckResponseActivity() {
+        return new PaymentAckResponseActivityImpl(customActivityEventListener);
+    }
+
+    @Bean
     public PaymentSanctionActivityImpl paymentSanctionActivity() {
         return new PaymentSanctionActivityImpl(customActivityEventListener);
     }

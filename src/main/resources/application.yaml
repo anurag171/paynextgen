@@ -5,6 +5,7 @@ server:
     threads:
       max: 10
       max-queue-capacity: 100
+spring:
   application:
     name: paynextgen
   temporal:

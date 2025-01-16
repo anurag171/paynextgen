@@ -22,14 +22,16 @@ public class CustomActivityEventListener {
     @Autowired
     SequenceGeneratorService sequenceGeneratorService;
 
-    @Async
     @EventListener
     public void handleActivityEvent(PaymentEvent event) {
-
-        switch (event.getActivityEventEnum()) {
-            case MONGO_EVENT -> mongoAction(event.getMongoEvent());
+        if(event.getActivityEventEnum()!= null){
+            switch (event.getActivityEventEnum()) {
+                case MONGO_EVENT -> mongoAction(event.getMongoEvent());
+                default -> log.info("unhandled event {} received",event.getActivityEventEnum().name());
+            }
+        }else{
+            log.info("missing event for message {} received",event);
         }
-
     }
 
     private void mongoAction(MongoEvent event) {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an example of a custom instrumentation extension XML file. -->
+
+<extension xmlns="https://newrelic.com/docs/java/xsd/v1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="newrelic-extension extension.xsd " name="extension-example"
+	version="1.0" enabled="true">
+	<instrumentation>
+
+		<!-- This point cut instruments some of the methods in the class com.sample.SampleArrayList. -->
+		<pointcut transactionStartPoint="true"
+			excludeFromTransactionTrace="false" ignoreTransaction="false">
+			<nameTransaction/>
+			<className>com.anurag.temporal.payment.processor.workflow.PaymentWorkFlowImpl</className>
+			<!-- Instruments the method clear() -->
+			<method>
+				<name>process</name>
+				<parameters>
+					<type>com.anurag.temporal.payment.processor.model.PaymentObject</type>
+				</parameters>
+				<!-- The parameters node should be specified if there are no input parameters 
+					and you only want to match clear(). Not specifying the parameters node will 
+					match all methods named clear on the class regardless of the input parameters. 
+					In other words it would match clear(int) clear(long) clear(int, long). -->
+			</method>
+			<!-- Instruments the method Object get(int index) -->
+			<method>
+				<name>processAsynchrousSanctionResponse</name>
+				<parameters>
+					<!-- Primitives should written using their name: byte, short, int, long, 
+						float, double, boolean, char -->
+					<type>com.anurag.temporal.payment.processor.model.SanctionResponse</type>
+				</parameters>
+			</method>
+			<!-- Instruments the method boolean addAll(int index, Collection c) -->
+			<method>
+				<name>processAsynchrousFraudResponse</name>
+				<parameters>
+					<!-- Make sure your parameters are listed in order. -->
+					<type>int</type>
+					<type>com.anurag.temporal.payment.processor.model.FraudResponse</type>
+				</parameters>
+			</method>
+		</pointcut>
+	</instrumentation>
+</extension>

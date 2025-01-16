@@ -1,5 +1,8 @@
 package com.anurag.temporal.payment.processor.configuration;
 
+import com.anurag.temporal.payment.processor.event.listener.PostApplicationReadyEventListener;
+import com.anurag.temporal.payment.processor.event.warmup.PaymentWarmUpEnumDto;
+import com.anurag.temporal.payment.processor.event.warmup.PaymentWarmUpRequestDto;
 import io.temporal.api.common.v1.WorkflowExecution;
 import io.temporal.api.enums.v1.WorkflowExecutionStatus;
 import io.temporal.api.workflow.v1.WorkflowExecutionInfo;
@@ -14,12 +17,17 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @Slf4j
 public class TemporalClientHealthVerification{
 
     @Autowired
     AppTemporalProperties temporalProperties;
+
+    @Autowired
+    PostApplicationReadyEventListener postApplicationReadyEventListener;
 
     @EventListener(ApplicationReadyEvent.class)
     public void temporalWorkerHealthCheck() throws Exception {
@@ -51,7 +59,19 @@ public class TemporalClientHealthVerification{
                 case WORKFLOW_EXECUTION_STATUS_TERMINATED -> log.info("Workflow is terminated");
                 case WORKFLOW_EXECUTION_STATUS_TIMED_OUT -> log.info("Workflow timed out");
                 case UNRECOGNIZED -> log.info("Workflow status unrecognized");
+                default -> log.info("Could not determine anything");
             }
         }
+        postApplicationReadyEventListener.handlePostApplicationReadyEvent(warmUpSampleMessage() );
         }
+
+    private PaymentWarmUpRequestDto warmUpSampleMessage() {
+        final PaymentWarmUpRequestDto warmUpRequestDto = new PaymentWarmUpRequestDto();
+        warmUpRequestDto.setWarmUpString("warm me up");
+        warmUpRequestDto.setWarmUpNumber(15);
+        warmUpRequestDto.setWarmUpBigDecimal(BigDecimal.TEN);
+        warmUpRequestDto.setWarmUpEnumDto(PaymentWarmUpEnumDto.WARM);
+
+        return warmUpRequestDto;
+    }
 }
