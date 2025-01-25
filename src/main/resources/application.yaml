@@ -41,4 +41,12 @@ management:
       exposure:
         include: "*"
       base-path: "/actuator"
-
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: ${jasypt.encyptor.password}
+mongodb:
+  connection:
+    string: ENC(opUdKVfxqKDlFexfoQPyS0ZRTFHSdRTCB/xi+L467cfQDetxWbNSTcZ178592oH/Y5XXxUshs5O9RisO8jctwR/oADTcmZI+SRBLQB/6pqwzCNx4feATJdPVoGF9wg16L2sUcyfPRpvL48WlwJKRM24FbzqjEGrC+InveJl/EmksBPsL+Mg7zg==)
+stub:
+  enabled: ${stub.enabled}

@@ -4,7 +4,9 @@ import com.mongodb.ReadConcern;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.WriteResultChecking;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MongoConfiguration {
 
+    @Autowired
+    Environment environment;
     /*@Value("${spring.data.mongodb.host}")
     private String host;
     @Value("${spring.data.mongodb.port}")
@@ -28,7 +32,8 @@ public class MongoConfiguration {
     //@Bean
     public MongoClient getMongoClient() {
 
-        MongoClient mongoClient = MongoClients.create("mongodb+srv://superdb:pattu123@mycluster0707.gbqwa.mongodb.net/?retryWrites=true&w=majority&appName=mycluster0707") ;
+       // MongoClient mongoClient = MongoClients.create("mongodb+srv://paynextgenuser1:patuu123@mycluster0707.gbqwa.mongodb.net/?retryWrites=true&w=majority&appName=mycluster0707") ;
+        MongoClient mongoClient = MongoClients.create(environment.getProperty("mongodb.connection.string")) ;
         mongoClient.withWriteConcern(WriteConcern.JOURNALED);
         mongoClient.withReadConcern(ReadConcern.AVAILABLE);
         return mongoClient;
