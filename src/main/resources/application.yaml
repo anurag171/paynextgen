@@ -47,6 +47,6 @@ jasypt:
     password: ${jasypt.encyptor.password}
 mongodb:
   connection:
-    string: ENC(opUdKVfxqKDlFexfoQPyS0ZRTFHSdRTCB/xi+L467cfQDetxWbNSTcZ178592oH/Y5XXxUshs5O9RisO8jctwR/oADTcmZI+SRBLQB/6pqwzCNx4feATJdPVoGF9wg16L2sUcyfPRpvL48WlwJKRM24FbzqjEGrC+InveJl/EmksBPsL+Mg7zg==)
+    string: ENC(SLDS6bFc4PH/Ahph8DGKvNuSj5IuKk44kQCcjiB4F3skJT9vNxH8FnEsX1//U9jjhK0HKwPILBNO+94Dlk+90tAuVJge92eTHdQ6PmEfqDsrj/TCnfnmpdTQIM5UB7SyL0ZAlOT4YzGTbINTjxMpEBc3lkV/1UDvMg3dAcAxQCU=)
 stub:
   enabled: ${stub.enabled}
