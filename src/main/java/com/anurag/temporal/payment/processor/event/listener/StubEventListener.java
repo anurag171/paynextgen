@@ -50,8 +50,10 @@ public class StubEventListener {
                 .bodyToMono(String.class)
                 .timeout(Duration.ofSeconds(60))
                 .block();
-
-        log.info("...warm up done, response received: " + response);
+        if(inputMessage.getWarmUp().equals("Y"))
+            log.info("...warm up done, response received: {} " , response);
+        else
+            log.info("...response received: {} " , response);
 
     }
 }

@@ -28,5 +28,6 @@ public class PaymentObject {
     private Map<String,Object> map;
     private Map<String,ActivityObject> activityObjectMap= new HashMap<>();
     private PaymentStatusContainer paymentStatusContainer;
+    private String warmUp;
 
 }

@@ -37,6 +37,7 @@ public class CustomActivityEventListener {
     private void mongoAction(MongoEvent event) {
         log.info("Received event {}", event);
         event.setId(String.valueOf(sequenceGeneratorService.generateSequence("payment_sequence")));
+        log.info("Added id event {}", event);
         mongoTemplate.save(event);
     }
 }
