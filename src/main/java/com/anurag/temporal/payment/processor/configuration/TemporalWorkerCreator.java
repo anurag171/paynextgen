@@ -38,9 +38,27 @@ public class TemporalWorkerCreator implements ApplicationRunner {
             Worker worker = factory.newWorker(temporalProperties.getQueue());
             worker.registerWorkflowImplementationTypes(PaymentWorkFlowImpl.class);
             worker.registerActivitiesImplementations(paymentValidationActivity, paymentSanctionActivity, paymentFraudActivity, paymentDebitCreditActivity);
+            retryStartWorkerUntilNotConnected(factory);
             factory.start();
+        }
+    }
 
-
+    private void retryStartWorkerUntilNotConnected(WorkerFactory factory) {
+        int retry = 0;
+        while (true){
+            try{
+                 factory.start();
+                 log.info("Successfully Connected to temporal server");
+                 break;
+            }catch (Exception ex){
+                retry++;
+                log.error("Exception {} while connecting to temporal server. \r\n Retry {] after 10 sec",ex.getMessage(),retry);
+                try {
+                    Thread.sleep(10000L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }
