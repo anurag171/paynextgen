@@ -5,6 +5,7 @@ import com.anurag.temporal.payment.processor.activity.PaymentSanctionActivity;
 import com.anurag.temporal.payment.processor.activity.PaymentValidationActivity;
 import com.anurag.temporal.payment.processor.constant.ActivityStageEnum;
 import com.anurag.temporal.payment.processor.model.*;
+import com.newrelic.api.agent.Trace;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
 import io.temporal.spring.boot.WorkflowImpl;
@@ -55,6 +56,7 @@ public class PaymentWorkFlowImpl implements PaymentWorkFlow{
     public final PaymentFraudActivity fraudActivity = Workflow
             .newActivityStub(PaymentFraudActivity.class, fraudActivityOptions);
 
+    @Trace(metricName = "WorkflowStart",nameTransaction = true,dispatcher = true)
     @Override
     public PaymentObject process(PaymentObject paymentObject) throws IOException, JDOMException {
         ThreadContext.getContext().put("workflowid", "Payment_"+paymentObject.getId());

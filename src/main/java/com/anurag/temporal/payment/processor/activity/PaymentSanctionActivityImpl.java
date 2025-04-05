@@ -8,6 +8,7 @@ import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionRequest;
 import com.anurag.temporal.payment.processor.service.PaymentUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newrelic.api.agent.Trace;
 import io.temporal.spring.boot.ActivityImpl;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class PaymentSanctionActivityImpl implements PaymentSanctionActivity{
      * @param paymentObject
      * @return
      */
+    @Trace(metricName = "SanctionRequest",nameTransaction = true,dispatcher = true)
     @Override
     public PaymentObject sanction(PaymentObject paymentObject) throws IOException {
         ThreadContext.getContext().put("workflowid", "Payment_"+paymentObject.getId());

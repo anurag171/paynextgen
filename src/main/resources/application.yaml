@@ -47,6 +47,7 @@ jasypt:
     password: ${secret}
 mongodb:
   connection:
-    string: ${db.connection}
+    string: ${dbConnection}
 stub:
   enabled: ${enableStub}
+  thread: ${stubThreadCount}

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+message Paymentobject {
+
+    message Map {
+        string error_description = 1;
+        string error_code = 2;
+    }
+
+    message Validation {
+        bool validated = 1;
+        uint32 validation_code = 2;
+        repeated google.protobuf.Any validation_failure_list = 3;
+    }
+
+    message ActivityObjectMap {
+        Validation validation = 1;
+    }
+
+    message PaymentStatusContainer {
+        bool payment_validated = 1;
+    }
+
+    string id = 1;
+    string message = 2;
+    string response_string = 3;
+    repeated uint32 received_time = 4;
+    double debit_amount = 5;
+    double credit_amount = 6;
+    double rate = 7;
+    string debit_ccy = 8;
+    string credit_ccy = 9;
+    Map map = 10;
+    ActivityObjectMap activity_object_map = 11;
+    PaymentStatusContainer payment_status_container = 12;
+    string warm_up = 13;
+}

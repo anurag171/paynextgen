@@ -9,6 +9,7 @@ import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.SanctionRequest;
 import com.anurag.temporal.payment.processor.service.PaymentUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newrelic.api.agent.Trace;
 import io.temporal.spring.boot.ActivityImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
@@ -31,6 +32,7 @@ public class PaymentFraudActivityImpl implements PaymentFraudActivity {
      * @param paymentObject
      * @return
      */
+    @Trace(metricName = "FraudRequest",nameTransaction = true,dispatcher = true)
     @Override
     public PaymentObject fraudCheck(PaymentObject paymentObject) throws IOException {
         log.info("Inside fraud check request activity");

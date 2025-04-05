@@ -19,7 +19,7 @@ public class PaymentUtility {
 
     public static PaymentObject handleHttpResponse(ResponseEntity<?> received, PaymentObject paymentObject) {
 
-        if(received.getStatusCode().is2xxSuccessful()){
+        if(received.getStatusCode().is4xxClientError() || received.getStatusCode().is5xxServerError()){
             return paymentObject;
         }
         //implement later the error handling

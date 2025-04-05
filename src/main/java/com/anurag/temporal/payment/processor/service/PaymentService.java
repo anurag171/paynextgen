@@ -11,6 +11,7 @@ import com.anurag.temporal.payment.processor.model.SanctionResponse;
 import com.anurag.temporal.payment.processor.workflow.PaymentWorkFlow;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newrelic.api.agent.Trace;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,7 @@ public class PaymentService {
 		return workflow.process(paymentObject);
 		//WorkflowClient.start(workflow::process,paymentObject);
 	}
+
 
 	public void processAsynchrousSanctionResponse(SanctionResponse sanctionResponse) {
 		log.info("Received signal for workflow id {}",sanctionResponse.getWorkflowid() );

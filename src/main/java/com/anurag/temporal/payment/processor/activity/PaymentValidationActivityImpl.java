@@ -7,6 +7,7 @@ import com.anurag.temporal.payment.processor.event.listener.CustomActivityEventL
 import com.anurag.temporal.payment.processor.event.mongo.MongoEvent;
 import com.anurag.temporal.payment.processor.model.PaymentObject;
 import com.anurag.temporal.payment.processor.model.PaymentValidationActivityObject;
+import com.newrelic.api.agent.Trace;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom2.JDOMException;
 import org.jdom2.input.JDOMParseException;
@@ -87,7 +88,7 @@ public class PaymentValidationActivityImpl implements PaymentValidationActivity{
         this.customActivityEventListener = customActivityEventListener;
     }
 
-
+    @Trace(metricName = "SanctionRequest",nameTransaction = true,dispatcher = true)
     @Override
     public PaymentObject validate(PaymentObject paymentObject) throws IOException, JDOMException {
         log.info("Received message {} in {}",paymentObject.toString(),this.getClass());
