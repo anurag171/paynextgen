@@ -36,7 +36,15 @@
 <img src="./images/img_8.png" width="80%"></p>
 <img src="./images/img_9.png" width="80%"></p>
 <img src="./images/img_10.png" width="80%"></p>
+<p align="center"><b>Observability through new relic</b></p>
+<img src="./images/newrelic_!.png" width="80%"></p>
+<img src="./images/new_Relic2.png" width="80%"></p>
+<img src="./images/newrelic_3.png" width="80%"></p>
+<img src="./images/newrelic_4.png" width="80%"></p>
 
+Dashboard pdf<br/>
+
+[Signals.pdf](images%2FSignals.pdf)
 Project details
 
 **This project is inspired by temporal ** .
@@ -68,7 +76,7 @@ Project details
 ## Project setup
 
 ```
-java -jar paymentnextgen.jar
+java -javaagent:./src/main/resources/newrelic/newrelic.jar -DdbConnection="ENC(SLDS6bFc4PH/Ahph8DGKvNuSj5IuKk44kQCcjiB4F3skJT9vNxH8FnEsX1//U9jjhK0HKwPILBNO+94Dlk+90tAuVJge92eTHdQ6PmEfqDsrj/TCnfnmpdTQIM5UB7SyL0ZAlOT4YzGTbINTjxMpEBc3lkV/1UDvMg3dAcAxQCU=)" -DenableStub=N -D"newrelic.config.log_level"=finest -Dsecret=Temporal@2025 -jar -DstubThreadCount=1 ./target/paynextgen.jar
 ```
 
 ## Future scope
